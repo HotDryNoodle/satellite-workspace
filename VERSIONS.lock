@@ -1,0 +1,22 @@
+[satellite-plugin-sdk]
+tag = "v0.1.0"
+commit = "040d91629ecd17f6e9311fabd4a94a5db0839382"
+wrap_revision = "HEAD"
+schema_version = "1.0"
+version = "0.1.0"
+
+[task-manager]
+tag = "v0.1.0"
+commit = "9f3505b33e265142c7b49066e934b6d23c290c27"
+
+[plugins.mission-planer]
+tag = "v0.1.0"
+commit = "0000000"
+
+[plugins.image-preprocess]
+tag = "v0.1.0"
+commit = "47aad55d3e84a4d41216affaaa992c51a6875970"
+
+[third_party.nlohmann_json]
+version = "3.12.0"
+wrap_hash = "b8cb0ef2dd7f57f18933997c9934bb1fa962594f701cd5a8d3c2c80541559372"

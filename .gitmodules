@@ -1,0 +1,12 @@
+[submodule "sdk"]
+	path = sdk
+	url = ../satellite-plugin-sdk
+[submodule "task-manager"]
+	path = task-manager
+	url = ../task-manager
+[submodule "plugins/mission-planer"]
+	path = plugins/mission-planer
+	url = ../mission-planer
+[submodule "plugins/image-preprocess"]
+	path = plugins/image-preprocess
+	url = ../image-preprocess
