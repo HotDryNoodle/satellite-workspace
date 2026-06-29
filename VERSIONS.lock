@@ -1,22 +1,22 @@
 [satellite-plugin-sdk]
 tag = "v0.1.0"
-commit = "bca3012e5682ed1f6ed50925d9dc47cedd03edc9"
+commit = "fdad28ed091b69ca199af1a35f88f2de5c15974b"
 wrap_url = "https://github.com/HotDryNoodle/satellite-plugin-sdk.git"
-wrap_revision = "bca3012e5682ed1f6ed50925d9dc47cedd03edc9"
+wrap_revision = "fdad28ed091b69ca199af1a35f88f2de5c15974b"
 schema_version = "1.0"
 version = "0.1.0"
 
 [task-manager]
 tag = "v0.1.0"
-commit = "fdf65126c013375725fd3be0ab68d124184aa47d"
+commit = "5b960c34c2d6c7942130e2f40eb696da17c34e69"
 
 [plugins.mission-planer]
 tag = "v0.1.0"
-commit = "c64add39ea754d165034af023818a97b050af8f0"
+commit = "c64ec6ddb331e919ec07a21c4c53a483f5f4a4d1"
 
 [plugins.image-preprocess]
 tag = "v0.1.0"
-commit = "0993c0cb2519d144926c63e327f169fe1181c77f"
+commit = "6a4452a71f771a2a4f2307a5267f74f9615be477"
 
 [third_party.nlohmann_json]
 version = "3.12.0"
