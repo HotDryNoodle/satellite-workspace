@@ -49,9 +49,4 @@ for ws_path in task-manager plugins/mission-planer plugins/image-preprocess; do
   update_wrap "$ROOT/$ws_path/subprojects/satellite-plugin-sdk.wrap"
 done
 
-# Keep wrap_revision in lock aligned with commit
-if grep -q '^wrap_revision' "$LOCK"; then
-  sed -i "s/^wrap_revision = .*/wrap_revision = \"$SDK_COMMIT\"/" "$LOCK"
-fi
-
 echo "sync complete: url=$SDK_URL revision=$SDK_COMMIT"

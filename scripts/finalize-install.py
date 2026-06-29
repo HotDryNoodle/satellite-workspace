@@ -9,42 +9,29 @@ import pathlib
 import sys
 
 
-def discover_plugin_manifests(root: pathlib.Path) -> list[tuple[str, pathlib.Path]]:
-    found: list[tuple[str, pathlib.Path]] = []
-    plugins_root = root / "plugins"
-    if not plugins_root.is_dir():
-        return found
-    for plugin_dir in sorted(plugins_root.iterdir()):
-        if not plugin_dir.is_dir():
+def discover_installed_manifests(plugins_dir: pathlib.Path) -> list[pathlib.Path]:
+    if not plugins_dir.is_dir():
+        return []
+    found: list[pathlib.Path] = []
+    for manifest_path in sorted(plugins_dir.glob("*.json")):
+        if manifest_path.name == "plugins.index.json":
             continue
-        manifest_dir = plugin_dir / "configs" / "plugins"
-        if not manifest_dir.is_dir():
-            continue
-        for manifest_path in sorted(manifest_dir.glob("*.json")):
-            found.append((plugin_dir.name, manifest_path))
+        found.append(manifest_path)
     return found
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--root", type=pathlib.Path, required=True)
     parser.add_argument("--install", type=pathlib.Path, required=True)
     args = parser.parse_args()
 
-    root = args.root.resolve()
     install = args.install.resolve()
     plugins_dir = install / "share" / "satellite" / "plugins"
     plugins_dir.mkdir(parents=True, exist_ok=True)
 
     entries = []
-    for repo_name, src in discover_plugin_manifests(root):
-        if not src.is_file():
-            print(f"warn: missing manifest {src}", file=sys.stderr)
-            continue
-        manifest = json.loads(src.read_text())
-        fname = src.name
-        dest = plugins_dir / fname
-        dest.write_text(json.dumps(manifest, indent=2) + "\n")
+    for manifest_path in discover_installed_manifests(plugins_dir):
+        manifest = json.loads(manifest_path.read_text())
         exe = install / "bin" / manifest["executable"]
         if not exe.is_file():
             print(f"error: executable not installed: {exe}", file=sys.stderr)
@@ -52,11 +39,11 @@ def main() -> int:
         entries.append(
             {
                 "tool_name": manifest["name"],
-                "manifest_path": str(dest.resolve()),
+                "manifest_path": str(manifest_path.resolve()),
                 "executable_resolved": str(exe.resolve()),
                 "plugin_version": manifest.get("version", "0.1.0"),
                 "schema_version": manifest.get("schema_version", "1.0"),
-                "repo": repo_name,
+                "repo": manifest_path.stem,
             }
         )
 

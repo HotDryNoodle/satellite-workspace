@@ -1,12 +1,12 @@
 [submodule "sdk"]
 	path = sdk
-	url = git@github.com:HotDryNoodle/satellite-plugin-sdk.git
+	url = https://github.com/HotDryNoodle/satellite-plugin-sdk.git
 [submodule "task-manager"]
 	path = task-manager
-	url = git@github.com:HotDryNoodle/task-manager.git
+	url = https://github.com/HotDryNoodle/task-manager.git
 [submodule "plugins/mission-planer"]
 	path = plugins/mission-planer
-	url = git@github.com:HotDryNoodle/mission-planer.git
+	url = https://github.com/HotDryNoodle/mission-planer.git
 [submodule "plugins/image-preprocess"]
 	path = plugins/image-preprocess
-	url = git@github.com:HotDryNoodle/image-preprocess.git
+	url = https://github.com/HotDryNoodle/image-preprocess.git

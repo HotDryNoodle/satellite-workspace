@@ -5,9 +5,14 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 source "$ROOT/scripts/lib/common.sh"
 
 run_version_check
+warn_dev_sdk
 prepare_install_tree
 
-build_meson sdk
+sdk_install_args=(-Dinstall_sdk=false)
+if [[ "${SATELLITE_INSTALL_SDK:-0}" == "1" ]]; then
+  sdk_install_args=(-Dinstall_sdk=true)
+fi
+build_meson sdk "${sdk_install_args[@]}"
 ensure_consumer_wraps
 build_meson task-manager -Dzmq=enabled
 build_meson plugins/mission-planer
