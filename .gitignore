@@ -1,0 +1,9 @@
+install/
+.cache/
+**/build/
+**/.meson-private/
+subprojects/packagecache/
+subprojects/*/
+!subprojects/*.wrap
+!subprojects/packagefiles/
+!subprojects/README.md

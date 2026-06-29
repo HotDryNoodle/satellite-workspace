@@ -1,0 +1,31 @@
+name: Integration
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+env:
+  SATELLITE_STRICT_VERSIONS: "1"
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y meson ninja-build g++ python3 libzmq3-dev
+
+      - name: Bootstrap submodules
+        run: ./scripts/bootstrap.sh
+
+      - name: Build
+        run: ./scripts/build-all.sh
+
+      - name: Smoke tests
+        run: |
+          source install/env.sh
+          ./scripts/smoke-integration.sh
