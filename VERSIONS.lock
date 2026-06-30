@@ -1,8 +1,8 @@
 [satellite-plugin-sdk]
 tag = "v0.1.0"
-commit = "08b8979f67aca7e9afef7fea661024cb5c169c36"
+commit = "594c532a66a70d4d915073c9058a8574402754e5"
 wrap_url = "https://github.com/HotDryNoodle/satellite-plugin-sdk.git"
-wrap_revision = "08b8979f67aca7e9afef7fea661024cb5c169c36"
+wrap_revision = "594c532a66a70d4d915073c9058a8574402754e5"
 schema_version = "1.0"
 version = "0.1.0"
 

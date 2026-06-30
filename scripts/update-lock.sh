@@ -4,6 +4,13 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 LOCK="$ROOT/VERSIONS.lock"
 
+SUBMODULES=(
+  sdk
+  task-manager
+  plugins/mission-planer
+  plugins/image-preprocess
+)
+
 read_existing_lock_field() {
   local section="$1" key="$2"
   [[ -f "$LOCK" ]] || return 0
@@ -18,6 +25,14 @@ read_existing_lock_field() {
   ' "$LOCK"
 }
 
+require_clean_submodule() {
+  local path="$1"
+  if [[ -n "$(git -C "$ROOT/$path" status --porcelain)" ]]; then
+    echo "error: submodule $path is dirty (commit or stash before update-lock.sh)" >&2
+    exit 1
+  fi
+}
+
 submodule_head() {
   local path="$1"
   if [[ ! -e "$ROOT/$path/.git" ]]; then
@@ -29,6 +44,14 @@ submodule_head() {
 
 submodule_tag() {
   local path="$1"
+  if [[ "${SATELLITE_RELEASE_LOCK:-0}" == "1" ]]; then
+    if ! git -C "$ROOT/$path" describe --tags --exact-match >/dev/null 2>&1; then
+      echo "error: $path HEAD is not an exact tag (required for SATELLITE_RELEASE_LOCK=1)" >&2
+      exit 1
+    fi
+    git -C "$ROOT/$path" describe --tags --exact-match
+    return
+  fi
   if git -C "$ROOT/$path" describe --tags --exact-match >/dev/null 2>&1; then
     git -C "$ROOT/$path" describe --tags --exact-match
     return
@@ -62,6 +85,10 @@ resolve_nlohmann_wrap() {
   fi
   [[ -f "$wrap" ]] && echo "$wrap"
 }
+
+for path in "${SUBMODULES[@]}"; do
+  require_clean_submodule "$path"
+done
 
 SDK_COMMIT=$(submodule_head sdk)
 SDK_VERSION=$(tr -d '[:space:]' < "$ROOT/sdk/VERSION")
@@ -123,4 +150,9 @@ export SATELLITE_SDK_WRAP_URL="$SDK_WRAP_URL"
 export SATELLITE_SDK_WRAP_COMMIT="$SDK_COMMIT"
 "$ROOT/scripts/sync-wrap-revisions.sh"
 
+if [[ "${SATELLITE_RELEASE_LOCK:-0}" == "1" ]]; then
+  echo "release lock: all submodules pinned to exact tags"
+else
+  echo "integration lock: tags may be inferred from VERSION when HEAD is not tagged"
+fi
 echo "lock updated from submodule HEADs; commit VERSIONS.lock and consumer wrap changes in submodules"

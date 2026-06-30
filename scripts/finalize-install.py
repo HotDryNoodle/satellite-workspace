@@ -43,9 +43,16 @@ def main() -> int:
                 "executable_resolved": str(exe.resolve()),
                 "plugin_version": manifest.get("version", "0.1.0"),
                 "schema_version": manifest.get("schema_version", "1.0"),
-                "repo": manifest_path.stem,
             }
         )
+
+    if not entries:
+        print(
+            f"error: no plugin manifests in {plugins_dir} "
+            "(expected Meson install_data to share/satellite/plugins/)",
+            file=sys.stderr,
+        )
+        return 1
 
     index_path = install / "share" / "satellite" / "plugins.index.json"
     index_path.write_text(

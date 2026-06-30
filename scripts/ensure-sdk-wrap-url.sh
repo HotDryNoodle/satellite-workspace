@@ -17,6 +17,22 @@ read_lock_field() {
   ' "$LOCK"
 }
 
+remote_has_commit() {
+  local url="$1" commit="$2"
+  git ls-remote "$url" 2>/dev/null | awk -v c="$commit" '$1 == c { found=1 } END { exit !found }'
+}
+
+ensure_local_mirror() {
+  mkdir -p "$ROOT/.cache"
+  if [[ ! -d "$CACHE" ]]; then
+    echo "==> creating local bare mirror at $CACHE"
+    git clone --bare "$ROOT/sdk" "$CACHE"
+  else
+    git -C "$CACHE" fetch "$ROOT/sdk" "+refs/heads/*:refs/heads/*" 2>/dev/null || \
+      git -C "$CACHE" fetch "$ROOT/sdk" "$SDK_COMMIT" 2>/dev/null || true
+  fi
+}
+
 SDK_COMMIT=$(read_lock_field satellite-plugin-sdk commit)
 CANONICAL_URL=$(read_lock_field satellite-plugin-sdk wrap_url)
 WRAP_URL="${SATELLITE_SDK_WRAP_URL:-$CANONICAL_URL}"
@@ -26,18 +42,19 @@ if [[ -z "$SDK_COMMIT" ]]; then
   exit 1
 fi
 
-if [[ -z "${SATELLITE_SDK_WRAP_URL:-}" ]] && ! git ls-remote --heads "$CANONICAL_URL" "$SDK_COMMIT" &>/dev/null; then
-  echo "warn: cannot reach $CANONICAL_URL (push repos to GitHub or set SATELLITE_SDK_WRAP_URL)" >&2
-  mkdir -p "$ROOT/.cache"
-  if [[ ! -d "$CACHE" ]]; then
-    echo "==> creating local bare mirror at $CACHE"
-    git clone --bare "$ROOT/sdk" "$CACHE"
+if [[ -z "${SATELLITE_SDK_WRAP_URL:-}" ]]; then
+  if remote_has_commit "$CANONICAL_URL" "$SDK_COMMIT"; then
+    WRAP_URL="$CANONICAL_URL"
   else
-    git -C "$CACHE" fetch "$ROOT/sdk" "+refs/heads/*:refs/heads/*" 2>/dev/null || \
-      git -C "$CACHE" fetch "$ROOT/sdk" "$SDK_COMMIT" 2>/dev/null || true
+    echo "warn: $CANONICAL_URL does not advertise commit $SDK_COMMIT (push SDK or set SATELLITE_SDK_WRAP_URL)" >&2
+    ensure_local_mirror
+    WRAP_URL="file://$CACHE"
+    echo "==> local mirror available at $WRAP_URL"
+    echo "warn: not rewriting committed consumer .wrap files (use SATELLITE_DEV_SDK=1 or push SDK)" >&2
+    export SATELLITE_SDK_WRAP_URL="$WRAP_URL"
+    export SATELLITE_SDK_WRAP_COMMIT="$SDK_COMMIT"
+    exit 0
   fi
-  WRAP_URL="file://$CACHE"
-  echo "==> using local wrap URL: $WRAP_URL"
 fi
 
 export SATELLITE_SDK_WRAP_URL="$WRAP_URL"

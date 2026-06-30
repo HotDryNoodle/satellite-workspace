@@ -43,31 +43,18 @@ link_local_sdk_subproject() {
   echo "dev: linked $consumer_dir/subprojects/satellite-plugin-sdk -> $target"
 }
 
-prepare_sdk_subproject() {
-  local consumer_dir="$1"
-  if dev_sdk_enabled; then
-    link_local_sdk_subproject "$consumer_dir"
-    return 0
-  fi
-  (
-    cd "$ROOT/$consumer_dir"
-    meson subprojects download satellite-plugin-sdk
-  )
-}
-
 build_meson() {
   local dir="$1"
   shift
   echo "==> building $dir"
   (
     cd "$ROOT/$dir"
-    if [[ "$dir" != "sdk" ]]; then
-      if dev_sdk_enabled; then
-        meson subprojects download
-        link_local_sdk_subproject "$dir"
-      else
-        meson subprojects download
-      fi
+    if [[ "$dir" == "sdk" ]]; then
+      # SDK has no self-wrap; only fetch third-party deps.
+      meson subprojects download nlohmann_json
+    elif dev_sdk_enabled; then
+      meson subprojects download
+      link_local_sdk_subproject "$dir"
     else
       meson subprojects download
     fi
