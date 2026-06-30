@@ -8,15 +8,15 @@ version = "0.1.0"
 
 [task-manager]
 tag = "v0.1.0"
-commit = "f908e08eafa40a7721cf6a477410883c632b0207"
+commit = "c3ea7e8f070d892c89269c83f1d3b8255f26d22c"
 
 [plugins.mission-planer]
 tag = "v0.1.0"
-commit = "3276713a5af2265226da4b9709158fe972a0bc39"
+commit = "4d3b24c5468ea21aa230ab6a092a459ec3aa70e3"
 
 [plugins.image-preprocess]
 tag = "v0.1.0"
-commit = "31730a9558adaca4f1e935e7b2519ac9e61b4f7d"
+commit = "4b44a284890d83f18ca1cd903794297a952f7884"
 
 [third_party.nlohmann_json]
 version = "3.12.0"
