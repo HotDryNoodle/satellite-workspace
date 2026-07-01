@@ -8,12 +8,9 @@ INSTALL="$ROOT/install"
 # shellcheck source=/dev/null
 source "$ROOT/install/env.sh"
 
-SAMPLE="$INSTALL/share/mission-planer/samples/task_submit_short.json"
+SAMPLE="$ROOT/scripts/integration-samples/task_submit_short.json"
 if [[ ! -f "$SAMPLE" ]]; then
-  SAMPLE="$ROOT/plugins/mission-planer/samples/task_submit_short.json"
-fi
-if [[ ! -f "$SAMPLE" ]]; then
-  echo "missing task_submit_short.json sample" >&2
+  echo "missing integration sample: $SAMPLE" >&2
   exit 1
 fi
 

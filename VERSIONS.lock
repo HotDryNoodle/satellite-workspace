@@ -12,7 +12,7 @@ commit = "c3ea7e8f070d892c89269c83f1d3b8255f26d22c"
 
 [plugins.mission-planer]
 tag = "v0.1.0"
-commit = "4d3b24c5468ea21aa230ab6a092a459ec3aa70e3"
+commit = "c7f9c24f3ca1283a77167458c96e9758772239a2"
 
 [plugins.image-preprocess]
 tag = "v0.1.0"

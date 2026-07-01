@@ -22,7 +22,7 @@ source install/env.sh
 
 Requires git submodules (see `.gitmodules`). Consumer repos pull **satellite-plugin-sdk** via Meson `[wrap-git]` using `wrap_url` + `revision` from `VERSIONS.lock` — not via local path patching at build time.
 
-Parent-repo commits use a structured message format (Goal / Changes / version-check). Enable locally with `bash scripts/install_commit_msg_hook.sh`; see `skills/commit-message-policy/`.
+Parent-repo commits use a structured message format (Goal / Changes / version-check). Enable locally with `bash scripts/install_commit_msg_hook.sh`; see `skills/commit-message-policy/`. Release 与 git-workflow 详见 `skills/release-workflow/`.
 
 ## Version checks (warn vs strict)
 
